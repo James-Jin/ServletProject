@@ -12,7 +12,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import sql.FinderException;
-import symphony.Composer;
 import symphony.Composition;
 import symphony.Movement;
 
@@ -26,7 +25,7 @@ import java.util.Collection;
  * table can be split into several different pages, each with
  * a 'Next n rows' link.
  */
-public class SymphonySVWithDAO extends HttpServlet	{
+public class MovementSV extends HttpServlet	{
 
 	/**
 	 * <p>Initialize the servlet. This is called once when the
@@ -86,10 +85,10 @@ public class SymphonySVWithDAO extends HttpServlet	{
 		/*	Print the HTML header														*/
 		out.println("<html>");
 		out.println("<head>");
-		out.println("<title>Symphony Composition List</title>");
+		out.println("<title>All Movements List</title>");
 		out.println("</head>");
 		out.println("<h2><center>");
-		out.println("Composition List");
+		out.println("Movement List");
 		out.println("</center></h2>");
 		out.println("<br>");
 
@@ -98,17 +97,8 @@ public class SymphonySVWithDAO extends HttpServlet	{
 		 */
 
 		try	{
-
-
-			Collection<Composer> composerList = Composer.findAll();
-			for(Composer composer: composerList){
-				String composerName = composer.getComposerName();
-
-				out.println("<p><center>Composer: " + composerName+"</center></p>");
-			//Collection<Composition> compositionList = Composition.findAll();
-			Collection<Composition> compositionList = Composition.findByComposerName(composerName);
-			formatTable(compositionList,  out,  uri);
-			}
+			Collection<Movement> list = Movement.findAll();
+			formatTable(list,  out,  uri);
 			
 		} catch (FinderException fe)	{
 			fe.printStackTrace(out);
@@ -131,7 +121,7 @@ public class SymphonySVWithDAO extends HttpServlet	{
 	 * @param uri Requesting URI
 	 * @return The number of rows in the ResultSet
 	 */
-	private void formatTable(Collection<Composition> list,
+	private void formatTable(Collection<Movement> list,
 									java.io.PrintWriter out,
 									String uri)
 			throws Exception		{
@@ -149,32 +139,17 @@ public class SymphonySVWithDAO extends HttpServlet	{
 		out.println("<tr>");
 
 		/*	Create each table header. Note that the column index is 1-based	*/
-		out.println("<th>" + "Composition Movement" + "</th>");
-		out.println("<th>" + "Movement" + "</th>");
+		out.println("<th>" + "Composition Name" + "</th>");
+		out.println("<th>" + "Composer" + "</th>");
 		out.println("</tr>");
 		
 
-	  for (Composition composition : list)	{
-		  
-
-		  
+	  for (Movement movement : list)	{
 			/* Start a table row																	*/
 			out.println("<tr>");
-			out.println("<td>" + composition.getCompositionName() + "</td>");
-			out.println("<td>" + "</td>");
+			out.println("<td>" + movement.getMovementNumber() + "</td>");
+			out.println("<td>" + movement.getMovementName() + "</td>");
 			out.println("</tr>");
-			
-			String compositionName = composition.getCompositionName();
-			  
-			Collection<Movement> movementList = Movement.findByCompositionName(compositionName);
-
-			for(Movement movement: movementList){
-				out.println("<tr>");
-				out.println("<td>"  + "</td>");
-				out.println("<td>" + movement.getMovementName() + "</td>");
-				out.println("</tr>");
-			}
-			
 	  
 //			lastYear = composition.getCompositionName();
 //			rowCount++;

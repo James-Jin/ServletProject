@@ -26,11 +26,11 @@ import sql.NoSuchEntityException;
  *
  * @author Reg
  */
-public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>	{
+public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 	/**
 	 * Creates a new instance of IndyWinnerDAO
 	 */
-	public CompositionDAO() { this(CoreDAO.DRIVER_NAME, CoreDAO.URL, CoreDAO.USER, CoreDAO.PASSWORD);		}
+	public MovementDAO() { this(CoreDAO.DRIVER_NAME, CoreDAO.URL, CoreDAO.USER, CoreDAO.PASSWORD);		}
 
 	/**
 	 *	Parameterized constructor.  When extending this class the
@@ -41,7 +41,7 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 * @param	user		Database user name.
 	 *	@param	password	Database password for access.
 	 */
-	public CompositionDAO(String drivername,
+	public MovementDAO(String drivername,
 						String url,
 						String user,
 						String password)	{
@@ -62,8 +62,8 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 *	@throws	DAOSysException
 	 */
 	@Override
-	public void dbInsert(CompositionModel model)	throws DAOSysException {
-		dbInsert(model, CompositionDAO.INSERT_STM);
+	public void dbInsert(MovementModel model)	throws DAOSysException {
+		dbInsert(model, MovementDAO.INSERT_STM);
 	}
 
 
@@ -74,19 +74,19 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 *	@throws	DAOSysException
 	 */
 	@Override
-	public void dbInsert(CompositionModel model, String insertStm) throws DAOSysException		{
+	public void dbInsert(MovementModel model, String insertStm) throws DAOSysException		{
 		PreparedStatement preparedStm = null;
 		Connection connection = null;
 
 		try	{
 			connection = connectToDB();
 			preparedStm = connection.prepareStatement(insertStm);
-			preparedStm.setString(1, model.getComposer());
-			preparedStm.setString(2, model.getCompostionName());
+			preparedStm.setInt(1, model.getMovementNumber());
+			preparedStm.setString(2, model.getMovementName());
 			preparedStm.executeUpdate();
 
 		}	catch (SQLException sex)	{
-			throw new DAOSysException("Error adding composition <" + model.getCompostionName() + "> " + sex.getMessage());
+			throw new DAOSysException("Error adding composition <" + model.getMovementNumber() + "   "+ model.getMovementName() + "> " + sex.getMessage());
 
 		}	finally	{
 			try	{
@@ -105,9 +105,9 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 * @throws sql.NoSuchEntityException
 	 */
 	@Override
-	public CompositionModel dbSelectByPrimaryKey(CompositionPK primarykey)
+	public MovementModel dbSelectByPrimaryKey(MovementPK primarykey)
 				throws DAOSysException, NoSuchEntityException	{
-		return dbSelectByPrimaryKey(primarykey, CompositionDAO.SELECT_STM);
+		return dbSelectByPrimaryKey(primarykey, MovementDAO.SELECT_STM);
 	}
 
 	/**
@@ -117,28 +117,28 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 *	@return	The persistence model for the entity, else null entity data is not found.
 	 */
 	@Override
-	public CompositionModel dbSelectByPrimaryKey(CompositionPK primarykey, String selectStm)
+	public MovementModel dbSelectByPrimaryKey(MovementPK primarykey, String selectStm)
 				throws DAOSysException, NoSuchEntityException	{
 //		IndyWinnerPK pk = (IndyWinnerPK) primarykey;
-		CompositionPK pk = primarykey;
+		MovementPK pk = primarykey;
 		Connection connection = null;
 		PreparedStatement preparedStm = null;
 		ResultSet rs = null;
 		boolean result = false;
-		CompositionModel model = new CompositionModel();
+		MovementModel model = new MovementModel();
 		try	{
 			connection = connectToDB();
 			preparedStm = connection.prepareStatement(selectStm);
-			preparedStm.setString(1, pk.getCompositionName());
+			preparedStm.setInt(1, pk.getMovementNumber());
+			preparedStm.setString(2, pk.getMovementName());
 			rs = preparedStm.executeQuery();
 
 			result = rs.next();
 			if (result)	{
-				model.setPrimarykey(new CompositionPK(rs.getString("compositionName")));
-				model.setComposer(rs.getString("composer"));
+				model.setPrimarykey(new MovementPK(rs.getInt(1), rs.getString(2)));
 	
 			}	else	{
-				throw new NoSuchEntityException("compositionName for <"
+				throw new NoSuchEntityException("movement for <"
 						+ primarykey + "> not found in the database.");
 			}
 
@@ -165,8 +165,8 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 *	@return	A collection of primary keys representing all of the entities.
 	 */
 	@Override
-	public Collection<CompositionPK> dbSelectAll()	throws DAOSysException {
-		return dbSelectAll(CompositionDAO.SELECT_ALL_STM);
+	public Collection<MovementPK> dbSelectAll()	throws DAOSysException {
+		return dbSelectAll(MovementDAO.SELECT_ALL_STM);
 	}
 
 
@@ -176,11 +176,11 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 * @return	A collection of primary keys representing all of the entities.
 	 */
 	@Override
-	public Collection<CompositionPK> dbSelectAll(String selectStm)	throws DAOSysException {
+	public Collection<MovementPK> dbSelectAll(String selectStm)	throws DAOSysException {
 		Connection connection = null;
 		PreparedStatement preparedStm = null;
 		ResultSet rs = null;
-		ArrayList<CompositionPK> list = null;
+		ArrayList<MovementPK> list = null;
 
 		try	{
 			connection = connectToDB();
@@ -189,7 +189,7 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 
 			list = new ArrayList<>();
 			while (rs.next())	{
-				list.add(new CompositionPK(rs.getString("compositionName")));
+				list.add(new MovementPK(rs.getInt("movementNumber"), rs.getString("movementName")));
 			}
 
 		}	catch (SQLException sex)	{
@@ -207,12 +207,13 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 		return list;
 	}
 
+	
 	/**
 	 * Called by findAll() to find all entities in the data store.
 	 *	@return	A collection of primary keys representing all of the entities.
 	 */
-	public Collection<CompositionPK> dbSelectSetByComposerName(String composerName)	throws DAOSysException {
-		return dbSelectSetByComposerName(CompositionDAO.SELECT_BY_COMPOSER_NAME, composerName);
+	public Collection<MovementPK> dbSelectByCompositionName(String compositionName)	throws DAOSysException {
+		return dbSelectByCompositionName(MovementDAO.SELECT_BY_COMPOSITION_NAME,compositionName);
 	}
 
 
@@ -221,28 +222,28 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 *	@param selectStm
 	 * @return	A collection of primary keys representing all of the entities.
 	 */
-	public Collection<CompositionPK> dbSelectSetByComposerName(String selectStm, String composerName)	throws DAOSysException {
+	public Collection<MovementPK> dbSelectByCompositionName(String selectStm,  String compositionName)	throws DAOSysException {
 		Connection connection = null;
 		PreparedStatement preparedStm = null;
 		ResultSet rs = null;
-		ArrayList<CompositionPK> list = null;
+		ArrayList<MovementPK> list = null;
 
 		try	{
 			connection = connectToDB();
 			preparedStm = connection.prepareStatement(selectStm);
-			preparedStm.setString(1, composerName);
+			preparedStm.setString(1, compositionName);
 			rs = preparedStm.executeQuery();
 
 			list = new ArrayList<>();
 			int count = 0;
-			while (rs.next())	{
-				list.add(new CompositionPK(rs.getString(1)));
+			while (rs.next()){
+				list.add(new MovementPK(rs.getInt(1), rs.getString(2)));
 				count++;
 			}
 
 		}	catch (SQLException sex)	{
 			throw new DAOSysException(
-						"dbSelectAll() SQL Exception\n"
+						"dbSelectByCompositionName() SQL Exception\n"
 						+ sex.getMessage());
 		}	finally	{
 			try	{
@@ -264,8 +265,8 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 *	@throws	DAOSysException
 	 */
 	@Override
-	public void dbUpdate(CompositionModel data)	throws DAOSysException	{
-		dbUpdate(data, CompositionDAO.UPDATE_STM);
+	public void dbUpdate(MovementModel data)	throws DAOSysException	{
+		dbUpdate(data, MovementDAO.UPDATE_STM);
 	}
 
 	/**
@@ -275,36 +276,36 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 *	@throws	DAOSysException
 	 */
 	@Override
-	public void dbUpdate(CompositionModel data, String updateStm)	throws DAOSysException {
-		CompositionModel model = data;
-		Connection connection = null;
-		PreparedStatement preparedStm = null;
-		try	{
-			connection = connectToDB();
-			preparedStm = connection.prepareStatement(updateStm);
-
-			/*	Grab values from persistent fields to store in database	*/
-			preparedStm.setString(1, model.getComposer());
-
- 			int rowCount = preparedStm.executeUpdate();
-			if (rowCount == 0)	{
- 				throw new DAOSysException(
- 					"Failed to store state for Composition <"
- 					+ model.getCompostionName() + ">");
- 			}
-
-		}	catch (SQLException sex)	{
-			throw new DAOSysException(
-					"dbUpdate() SQL Exception <"
-					+ sex.getMessage() + ">");
-
-		}	finally	{
-			try	{
-				releaseAll(null, preparedStm, connection);
-			} catch (Exception ex)	{
-				System.err.println("Error releasing resources <" + ex.toString());
-			}
-		}
+	public void dbUpdate(MovementModel data, String updateStm)	throws DAOSysException {
+//		MovementModel model = data;
+//		Connection connection = null;
+//		PreparedStatement preparedStm = null;
+//		try	{
+//			connection = connectToDB();
+//			preparedStm = connection.prepareStatement(updateStm);
+//
+//			/*	Grab values from persistent fields to store in database	*/
+//			preparedStm.setString(1, model.getComposer());
+//
+// 			int rowCount = preparedStm.executeUpdate();
+//			if (rowCount == 0)	{
+// 				throw new DAOSysException(
+// 					"Failed to store state for Movement <"
+// 					+ model.getCompostionName() + ">");
+// 			}
+//
+//		}	catch (SQLException sex)	{
+//			throw new DAOSysException(
+//					"dbUpdate() SQL Exception <"
+//					+ sex.getMessage() + ">");
+//
+//		}	finally	{
+//			try	{
+//				releaseAll(null, preparedStm, connection);
+//			} catch (Exception ex)	{
+//				System.err.println("Error releasing resources <" + ex.toString());
+//			}
+//		}
 	}
 
 	/**
@@ -314,8 +315,8 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 * @throws	DAOSysException
 	 */
 	@Override
-	public int dbRemove(CompositionPK primarykey)	throws DAOSysException	{
-		return dbRemove(primarykey, CompositionDAO.DELETE_STM);
+	public int dbRemove(MovementPK primarykey)	throws DAOSysException	{
+		return dbRemove(primarykey, MovementDAO.DELETE_STM);
 	}
 
 
@@ -327,8 +328,8 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	 *	@throws	DAOSysException
 	 */
 	@Override
-	public int dbRemove(CompositionPK primarykey, String deleteStm)	throws DAOSysException	{
-		CompositionPK pk = primarykey;
+	public int dbRemove(MovementPK primarykey, String deleteStm)	throws DAOSysException	{
+		MovementPK pk = primarykey;
 		Connection connection = null;
 		PreparedStatement preparedStm = null;
 		int result = 0;
@@ -336,12 +337,13 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 		try	{
 			connection = connectToDB();
 			preparedStm = connection.prepareStatement(deleteStm);
-			preparedStm.setString(1, pk.getCompositionName());
+			preparedStm.setInt(1, pk.getMovementNumber());
+			preparedStm.setString(2, pk.getMovementName());
 			result = preparedStm.executeUpdate();
 
 			if (result == 0)	{
 				throw new SQLException(
-						"Failed to remove IndyWinner <"
+						"Failed to remove Movement <"
 						+ pk.toString() + ">.");
 			}
 
@@ -377,7 +379,7 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 			connection = connectToDB();
 			/*	Request a resultset that is scrollable to easily count rows	*/
 			preparedStm = connection.prepareStatement(
-										CompositionDAO.SELECT_DISTINCT_STM,
+										MovementDAO.SELECT_DISTINCT_STM,
 										ResultSet.TYPE_SCROLL_INSENSITIVE,
 										ResultSet.CONCUR_UPDATABLE);
 			rs = preparedStm.executeQuery();
@@ -408,31 +410,36 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	private final static boolean _debug = false;
 
 	private static String SELECT_DISTINCT_STM =
-		"SELECT DISTINCT compositionName FROM " + "Composition";
+		"SELECT DISTINCT movementNumber, movementName FROM " + "Movement";
 
 	private static String DELETE_STM =
-		"DELETE FROM " + "Composition"
-		+ " WHERE compositionName = ?";
+		"DELETE FROM " + "movement"
+		+ " WHERE movementNumber = ? AND movementName = ?";
 
+	//place holder, nothing to update for movement
 	private static String UPDATE_STM =
-		"UPDATE " + "Composition"
+		"UPDATE " + "movement"
 		+ " SET "
 		+ "composer = ? ";
 
 	private static String SELECT_ALL_STM =
-			"SELECT DISTINCT compositionName " + "FROM " + "Composition";
+			"SELECT movementNumber, movementName " + "FROM " + "movement";
 	
-	private static String SELECT_BY_COMPOSER_NAME =
-			"SELECT DISTINCT compositionName " + "FROM Composition" + " WHERE composer = ?";
+//	private static String SELECT_SET_BY_YEAR_STM =
+//			"SELECT DISTINCT year " + "FROM " + "IndyWinners WHERE YEAR > ?";
+	
+	private static String SELECT_BY_COMPOSITION_NAME = 
+			"SELECT movementNumber, movementName FROM movements WHERE compositionName = ?";
 
 	private static String SELECT_STM = "SELECT "
-		+ " composer, "
-		+ " compositionName "
-		+ " FROM Composition "
-		+ " WHERE compositionName = ?";
+		+ " movementNumber, "
+		+ " movementName "
+		+ " FROM movement "
+		+ " WHERE movementNumber = ?"
+		+ " AND movementName = ?";
 
 	private static String INSERT_STM = "INSERT INTO "
-		+ "Composition"
+		+ "movement"
 		+ " VALUES "
 		+ "( ?, ? )";
 

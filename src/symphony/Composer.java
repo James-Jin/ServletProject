@@ -12,7 +12,7 @@ import sql.*;
 /**
  * Class representing an Indianapolis 500 race winner.
  */
-public class Composition		{
+public class Composer		{
 	/* STATIC PRE-OBJECT BEHAVIOR	-----------------------------------	*/
 	/* CREATORS	-----------------------------------------------------	*/
 	/**
@@ -23,14 +23,13 @@ public class Composition		{
 	 *	@return	An instance of an IndyWinner entity.
 	 *	@throws sql.CreateException
 	 */
-	public static Composition create(String composer,
-											String compositionName)
+	public static Composer create(String name)
 													throws CreateException	{
 
-		CompositionModel model = new CompositionModel(composer, compositionName);
-		CompositionDAO dao = null;
+		ComposerModel model = new ComposerModel(name);
+		ComposerDAO dao = null;
 		try	{
-			dao = (CompositionDAO) DAOFactory.getDAO(className);
+			dao = (ComposerDAO) DAOFactory.getDAO(className);
 			dao.dbInsert(model);
 			/* This Indywinner has no other objects to reference			*/
 
@@ -38,7 +37,7 @@ public class Composition		{
 			throw new CreateException(sqlex.getMessage());
 		}
 
-		return	new Composition(model);
+		return	new Composer(model);
 	}
 
 	/* FINDERS	-----------------------------------------------------	*/
@@ -53,16 +52,16 @@ public class Composition		{
 	 * @throws sql.NoSuchEntityException
 	 * @param	primarykey	The primary key of the IndyWinner to find.
 	 */
-	public static Composition findByPrimarykey(CompositionPK primarykey)
+	public static Composer findByPrimarykey(ComposerPK primarykey)
 								throws FinderException, NoSuchEntityException			{
 
-		CompositionModel model = null;
-		Composition entity = null;
-		CompositionDAO dao = null;
+		ComposerModel model = null;
+		Composer entity = null;
+		ComposerDAO dao = null;
 		try	{
-			dao = (CompositionDAO) DAOFactory.getDAO(className);
-			model = (CompositionModel) dao.dbSelectByPrimaryKey(primarykey);
-			entity  = new Composition(model);
+			dao = (ComposerDAO) DAOFactory.getDAO(className);
+			model = (ComposerModel) dao.dbSelectByPrimaryKey(primarykey);
+			entity  = new Composer(model);
 
 			/* TODO:	add any other objects for this IndyWinner here		*/
 
@@ -81,27 +80,24 @@ public class Composition		{
 	 *	@throws	FinderException
 	 * @throws	CreateException
 	 */
-	public static Collection<Composition> findAll() throws FinderException, CreateException			{
-		ArrayList<Composition> listOfCompositions = new ArrayList<>();
-		CompositionDAO dao = null;
+	public static Collection<Composer> findAll() throws FinderException, CreateException			{
+		ArrayList<Composer> listOfComposers = new ArrayList<>();
+		ComposerDAO dao = null;
 
 		try	{
-			dao = (CompositionDAO) DAOFactory.getDAO(className);
-			Collection<CompositionPK> c = dao.dbSelectAll();
-			Iterator<CompositionPK> itr = c.iterator();
+			dao = (ComposerDAO) DAOFactory.getDAO(className);
+			Collection<ComposerPK> c = dao.dbSelectAll();
+			Iterator<ComposerPK> itr = c.iterator();
 			while (itr.hasNext())	{
-				CompositionPK cpk = itr.next();
+				ComposerPK cpk = itr.next();
 				try	{
-					Composition entity = Composition.findByPrimarykey(cpk);
+					Composer entity = Composer.findByPrimarykey(cpk);
 
-					/* TODO:	build/get any other objects for this IndyWinner here		*/
-
-
-					/* Add this Indywinner to the list.						*/
-					listOfCompositions.add(entity);
+					/* TODO:	build/get any other objects for this IndyWinner here		*/					
+					listOfComposers.add(entity);
 
 				} catch (FinderException | NoSuchEntityException ex)	{
-					System.err.println("Composition: Error processing list <" + ex.toString());
+					System.err.println("Composer: Error processing list <" + ex.toString());
 				}
 			}
 
@@ -111,44 +107,9 @@ public class Composition		{
 		}
 
 
-		return listOfCompositions;
+		return listOfComposers;
 	}
 	
-	/**
-	 *	Find Indywinner entities based a primary key starting point and retrieve a limited number of entities.
-	 *	@return	A collection of Indywinner instances.
-	 *	@throws	FinderException
-	 * @throws	CreateException
-	 */
-	public static Collection<Composition> findByComposerName(String composerName) throws FinderException, CreateException			{
-		ArrayList<Composition> listOfCompositions = new ArrayList<>();
-		CompositionDAO dao = null;
-		
-		try	{
-			dao = (CompositionDAO) DAOFactory.getDAO(className);
-			Collection<CompositionPK> c = dao.dbSelectSetByComposerName(composerName);
-			Iterator<CompositionPK> itr = c.iterator();
-			while (itr.hasNext())	{
-				CompositionPK cpk = itr.next();
-				try	{
-					Composition entity = Composition.findByPrimarykey(cpk);
-
-					/* TODO:	build/get any other objects for this IndyWinner here		*/
-					listOfCompositions.add(entity);
-
-				} catch (FinderException | NoSuchEntityException ex)	{
-					System.err.println("IndyWinner: Error processing list <" + ex.toString());
-				}
-			}
-
-		} catch (Exception sqlex)	{
-			sqlex.printStackTrace();
-			throw new CreateException(sqlex.getMessage());
-		}
-
-
-		return listOfCompositions;
-	}
 
 
 	/* REMOVERS	-----------------------------------------------------	*/
@@ -157,17 +118,17 @@ public class Composition		{
 	 *	@param	primarykey	The primary key for the Indywinner to find.
 	 *	@throws	ObjectNotFoundException
 	 */
-	private static int removeByPrimarykey(CompositionPK primarykey)
+	private static int removeByPrimarykey(ComposerPK primarykey)
 								throws	DAOSysException, NoSuchEntityException	{
 		int rc = 0;
-		CompositionDAO dao = null;
+		ComposerDAO dao = null;
 
 		/*	TODO:	remove any other objects here first ...				*/
 
 
 
 		/* ...then remove the Indy Winner									*/
-		dao = (CompositionDAO) DAOFactory.getDAO(className);
+		dao = (ComposerDAO) DAOFactory.getDAO(className);
 		rc = dao.dbRemove(primarykey);
 
 		return rc;
@@ -178,7 +139,7 @@ public class Composition		{
 	/**
 	 *	Default constructor
 	 */
-	private Composition()	{ super();		}
+	private Composer()	{ super();		}
 
 	/**
 	 *	Parameterized constructor.
@@ -186,15 +147,15 @@ public class Composition		{
 	 * @param driver	The winning driver for the year of the race.
 	 * @param averageSpeed	The average speed the driver attained for the year of the race.
 	 */
-	private Composition(String composer, String compositionName)		{
-		this(new CompositionModel(composer, compositionName));
+	private Composer(String name)		{
+		this(new ComposerModel(name));
 	}
 
 	/**
 	 *	Parameterized constructor.
 	 *	@param	model	The persistence model for a Indywinner object.
 	 */
-	private Composition(CompositionModel model)	{
+	private Composer(ComposerModel model)	{
 		setModel(model);
 
 		/* TODO:	add any other initialization requirements here			*/
@@ -203,20 +164,15 @@ public class Composition		{
 
 
 	/* ACCESSORS	--------------------------------------------------	*/
-	public CompositionModel getModel()			{ return model;												}
-	public CompositionPK getPrimaryKey()			{ return getModel().getPrimarykey();					}
-	public String getCompositionName()						{ return getModel().getPrimarykey().getCompositionName(); 		}
- 	public String getComposer()						{ return getModel().getComposer();							}
+	public ComposerModel getModel()			{ return model;												}
+	public ComposerPK getPrimaryKey()			{ return getModel().getPrimarykey();					}
+	public String getComposerName()						{ return getModel().getPrimarykey().getName(); 		}
 
 
 	/* MODIFIERS	--------------------------------------------------	*/
-	private void setModel(CompositionModel model)	{ this.model = model;								}
+	private void setModel(ComposerModel model)	{ this.model = model;								}
 
-	private void setPrimarykey(CompositionPK pk)	{ getModel().setPrimarykey(pk);						}
-	public void setComposer(String composer)				{
-		getModel().setComposer(composer);
-		update();
-	}
+	private void setPrimarykey(ComposerPK pk)	{ getModel().setPrimarykey(pk);						}
 
 
 	/* BEHAVIOR	-----------------------------------------------------	*/
@@ -229,9 +185,8 @@ public class Composition		{
 	 */
 	@Override
 	public boolean equals(Object obj)	{
-		return	obj instanceof Composition
-			&&	(getCompositionName().equals(((Composition) obj).getCompositionName())
-			);
+		return	obj instanceof Composer
+			&&	(getComposerName().equals(((Composer) obj).getComposerName()));
 	}
 
 	/**
@@ -244,7 +199,7 @@ public class Composition		{
 	 */
 	@Override
 	public int hashCode() {
-		return	getCompositionName().concat(getComposer()).hashCode();
+		return	getComposerName().hashCode();
 	}
 
 	/**
@@ -263,8 +218,8 @@ public class Composition		{
 	@Override
 	public String toString()	{ return this.toString(", ");				}
 	public String toString(String sep)	{
-		return "compositionName=" + getCompositionName()
-				+ sep + "composer=" + getComposer()
+		return "movement=" + getComposerName()
+				+ sep + "movement name=" + getComposerName()
 			;
 	}
 
@@ -274,8 +229,8 @@ public class Composition		{
 	 * @throws sql.NoSuchEntityException
 	 * @throws sql.DAOSysException
 	 */
-	public Composition remove()	throws NoSuchEntityException, DAOSysException	{
-		Composition c = null;
+	public Composer remove()	throws NoSuchEntityException, DAOSysException	{
+		Composer c = null;
 		if (removeByPrimarykey(getPrimaryKey()) > 0)	{
 			c = this;
 		}
@@ -288,10 +243,10 @@ public class Composition		{
 	 * from the database.
 	 */
 	private void load() throws DAOSysException		{
-		CompositionDAO dao = null;
+		ComposerDAO dao = null;
 		try	{
-			dao = (CompositionDAO) DAOFactory.getDAO(className);
-			setModel((CompositionModel)dao.dbLoad(getPrimaryKey()));
+			dao = (ComposerDAO) DAOFactory.getDAO(className);
+			setModel((ComposerModel)dao.dbLoad(getPrimaryKey()));
 
 		} catch (DAOSysException | NoSuchEntityException ex)	{
 			throw new DAOSysException(ex.getMessage());
@@ -303,9 +258,9 @@ public class Composition		{
 	 * Invoke this method to save the cached attribute values to the datastore.
 	 */
 	private void store()	throws DAOSysException		{
-		CompositionDAO dao = null;
+		ComposerDAO dao = null;
 		try	{
-			dao = (CompositionDAO) DAOFactory.getDAO(className);
+			dao = (ComposerDAO) DAOFactory.getDAO(className);
 			dao.dbStore(getModel());
 		} catch (Exception ex)	{
 			throw new DAOSysException(ex.getMessage());
@@ -318,13 +273,12 @@ public class Composition		{
 	private static final boolean _debug = false;
 
 	/** Class name for static method purposes.								*/
-	private static String className = "symphony.Composition";
+	private static String className = "symphony.Composer";
 
-	/** Persistence model for an Indy Winner object.							*/
-	private CompositionModel model;
+	private ComposerModel model;
 
 
 	/* REFERENCE ATTRIBUTES	-----------------------------------------	*/
 
 
-}	/*	End of CLASS:	Composition.java				*/
+}	/*	End of CLASS:	Composer.java				*/
