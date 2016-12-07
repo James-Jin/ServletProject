@@ -118,9 +118,8 @@ public class SymphonySVWithDAO extends HttpServlet	{
 				String composerName = composer.getComposerName();
 
 				out.println("<p><center>Composer: " + composerName+"</center></p>");
-			//Collection<Composition> compositionList = Composition.findAll();
 			Collection<Composition> compositionList = Composition.findByComposerName(composerName);
-			boolean moreRows = formatTable(compositionList,  out,  uri, pageNum);
+			boolean moreRows = formatTable(compositionList, out,  uri, pageNum);
 			
 			if(moreComposer){
 				out.println("<form method=POST action=\"" + uri + "\">");
@@ -139,9 +138,9 @@ public class SymphonySVWithDAO extends HttpServlet	{
 				pageNum++;
 				
 				out.println("<form method=POST action=\"" + uri + "\">");
-				//out.println("<center>");
+				out.println("<center>");
 				out.println("<input type=submit value=\"Next 10 rows\">");
-				//out.println("</center>");
+				out.println("</center>");
 
 				/* Page was filled. Put in the last year that we saw						*/
 				out.println("<input type=hidden name=pageNum value=" + pageNum + ">");
@@ -183,8 +182,6 @@ public class SymphonySVWithDAO extends HttpServlet	{
 		/*	Keep track of the last year found		
 		 * 
 		 * 										*/
-
-
 		/*	Create the table																		*/
 		out.println("<center><table border>");
 
@@ -207,6 +204,7 @@ public class SymphonySVWithDAO extends HttpServlet	{
 				out.println("<td>" + "</td>");
 				out.println("</tr>");
 		  	}else if(rowCounter >= rowToEnd){
+				out.println("</table></center>");
 		  		return true;
 		  	}else{
 		  		//do nothing
@@ -225,6 +223,7 @@ public class SymphonySVWithDAO extends HttpServlet	{
 					out.println("<td>" + movement.getMovementName() + "</td>");
 					out.println("</tr>");
 			  	}else if(rowCounter >= rowToEnd){
+					out.println("</table></center>");
 			  		return true;
 			  	}else{
 			  		//do nothing
@@ -232,7 +231,7 @@ public class SymphonySVWithDAO extends HttpServlet	{
 			  	rowCounter++;
 
 			}
-			
+
 	  
 	  }
 
