@@ -80,7 +80,7 @@ public class Composer		{
 	 *	@throws	FinderException
 	 * @throws	CreateException
 	 */
-	public static Collection<Composer> findAll() throws FinderException, CreateException			{
+	public static ArrayList<Composer> findAll() throws FinderException, CreateException			{
 		ArrayList<Composer> listOfComposers = new ArrayList<>();
 		ComposerDAO dao = null;
 

@@ -16,7 +16,9 @@ import symphony.Composer;
 import symphony.Composition;
 import symphony.Movement;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * <p>This is a simple servlet that will use JDBC to gather all
@@ -69,14 +71,21 @@ public class SymphonySVWithDAO extends HttpServlet	{
 	 	 *	called us. Remember that we are sorting
 	 	 *	the years in descending order.
 	 	 */
-//		String lastYear = req.getParameter("lastYear");
-//		int year = 0;
-//		
-//		if (lastYear == null) {
-//			lastYear = "0";
-//		}
-
-//		year = Integer.parseInt(lastYear);
+		String composerToShowStr = req.getParameter("composerToShow");	
+		int composerToShow ;
+		if (composerToShowStr == null ) {
+			composerToShow = 0;
+		}else{
+			composerToShow = Integer.parseInt(composerToShowStr);
+		}
+		
+		String pageNumberStr = req.getParameter("pageNum");
+		int pageNum;
+		if (pageNumberStr == null){
+			pageNum = 1;
+		}else{
+			pageNum = Integer.parseInt(pageNumberStr);
+		}
 
 		/*	Get the URI, Set the content type, and create a PrintWriter		*/
 		String uri = req.getRequestURI();
@@ -98,17 +107,47 @@ public class SymphonySVWithDAO extends HttpServlet	{
 		 */
 
 		try	{
-
-
-			Collection<Composer> composerList = Composer.findAll();
-			for(Composer composer: composerList){
+			
+			boolean moreComposer = true;
+			ArrayList<Composer> composerList = Composer.findAll();
+			Composer composer = composerList.get(composerToShow);
+			composerToShow++;
+			if(composerToShow >= composerList.size()){
+				moreComposer = false;
+			}
 				String composerName = composer.getComposerName();
 
 				out.println("<p><center>Composer: " + composerName+"</center></p>");
 			//Collection<Composition> compositionList = Composition.findAll();
 			Collection<Composition> compositionList = Composition.findByComposerName(composerName);
-			formatTable(compositionList,  out,  uri);
+			boolean moreRows = formatTable(compositionList,  out,  uri, pageNum);
+			
+			if(moreComposer){
+				out.println("<form method=POST action=\"" + uri + "\">");
+				out.println("<center>");
+				out.println("<input type=submit value=\"Next Composer\">");
+				out.println("</center>");
+
+				/* Page was filled. Put in the last year that we saw						*/
+				out.println("<input type=hidden name=composerToShow value=" + composerToShow + ">");
+				out.println("</form>");
+			}else{
+				out.println("<p><center>Last Composer</center></p>");
 			}
+			
+			if(moreRows){
+				pageNum++;
+				
+				out.println("<form method=POST action=\"" + uri + "\">");
+				//out.println("<center>");
+				out.println("<input type=submit value=\"Next 10 rows\">");
+				//out.println("</center>");
+
+				/* Page was filled. Put in the last year that we saw						*/
+				out.println("<input type=hidden name=pageNum value=" + pageNum + ">");
+				out.println("</form>");
+			}
+			
 			
 		} catch (FinderException fe)	{
 			fe.printStackTrace(out);
@@ -129,18 +168,22 @@ public class SymphonySVWithDAO extends HttpServlet	{
 	 * @param list	Collection of Indy Winners
 	 * @param out PrintWriter to use to output the table
 	 * @param uri Requesting URI
-	 * @return The number of rows in the ResultSet
+	 * @return true if has more pages to show
 	 */
-	private void formatTable(Collection<Composition> list,
+	private boolean formatTable(Collection<Composition> list,
 									java.io.PrintWriter out,
-									String uri)
+									String uri,
+									int pageNum)
 			throws Exception		{
 
-//		int rowsPerPage = 10;
-//		int rowCount = 0;
+		int rowToStart = (pageNum-1)*10;
+		int rowToEnd = pageNum *10;
+		int rowCounter = 0;
 
-		/*	Keep track of the last year found												*/
-//		String lastYear = "";
+		/*	Keep track of the last year found		
+		 * 
+		 * 										*/
+
 
 		/*	Create the table																		*/
 		out.println("<center><table border>");
@@ -149,60 +192,53 @@ public class SymphonySVWithDAO extends HttpServlet	{
 		out.println("<tr>");
 
 		/*	Create each table header. Note that the column index is 1-based	*/
-		out.println("<th>" + "Composition Movement" + "</th>");
+		out.println("<th>" + "Composition" + "</th>");
 		out.println("<th>" + "Movement" + "</th>");
 		out.println("</tr>");
-		
+	  
 
 	  for (Composition composition : list)	{
 		  
 
-		  
-			/* Start a table row																	*/
-			out.println("<tr>");
-			out.println("<td>" + composition.getCompositionName() + "</td>");
-			out.println("<td>" + "</td>");
-			out.println("</tr>");
+		  	if(rowCounter>=rowToStart && rowCounter < rowToEnd){
+				/* Start a table row																	*/
+				out.println("<tr>");
+				out.println("<td>" + composition.getCompositionName() + "</td>");
+				out.println("<td>" + "</td>");
+				out.println("</tr>");
+		  	}else if(rowCounter >= rowToEnd){
+		  		return true;
+		  	}else{
+		  		//do nothing
+		  	}
+		  	rowCounter++;
 			
 			String compositionName = composition.getCompositionName();
 			  
 			Collection<Movement> movementList = Movement.findByCompositionName(compositionName);
 
 			for(Movement movement: movementList){
-				out.println("<tr>");
-				out.println("<td>"  + "</td>");
-				out.println("<td>" + movement.getMovementName() + "</td>");
-				out.println("</tr>");
+			  	if(rowCounter>=rowToStart && rowCounter < rowToEnd){
+					/* Start a table row																	*/
+					out.println("<tr>");
+					out.println("<td>"  + "</td>");
+					out.println("<td>" + movement.getMovementName() + "</td>");
+					out.println("</tr>");
+			  	}else if(rowCounter >= rowToEnd){
+			  		return true;
+			  	}else{
+			  		//do nothing
+			  	}
+			  	rowCounter++;
+
 			}
 			
 	  
-//			lastYear = composition.getCompositionName();
-//			rowCount++;
 	  }
-
-//		rowCount = rowCount < 10 ? 0 : rowCount;
 
 		/*	End the table																			*/
 		out.println("</table></center>");
-
-	//	if (more)	{
-		
-		
-			/*	Create a 'Next' button															*/
-//			out.println("<form method=POST action=\"" + uri + "\">");
-//			out.println("<center>");
-//			out.println("<input type=submit value=\"Next " + rowsPerPage + " rows\">");
-//			out.println("</center>");
-//
-//			/* Page was filled. Put in the last year that we saw						*/
-//			out.println("<input type=hidden name=lastYear value=" + lastYear + ">");
-//			out.println("</form>");
-			
-			
-			
-//		}
-
-//		return rowCount;
+		return false;
 	}
 
 }
