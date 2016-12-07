@@ -19,13 +19,4 @@
 		<url-pattern>/servlet/symphonySV</url-pattern>
 	</servlet-mapping>
 	
-	<servlet>
-		<servlet-name>MovementList</servlet-name>
-		<servlet-class>MovementSV</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>MovementList</servlet-name>
-		<url-pattern>/servlet/movementSV</url-pattern>
-	</servlet-mapping>
-	
 </web-app>
