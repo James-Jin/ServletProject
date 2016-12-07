@@ -1,39 +1,30 @@
-/*
- * IndywinnerModel.java
- *
- * Created on July 2, 2005, 2:13 PM
- */
-
 package symphony;
 
 import sql.CorePersistenceModel;
 
 /**
- * IndywinnerModel represents the persistence model for a customer object.
- * @author Reg
+ * CompositionModel represents the persistence model for a customer object.
  */
 public class CompositionModel extends CorePersistenceModel<CompositionPK>	{
 	/**
-	 * Creates a default instance of IndywinnerModel
+	 * Creates a default instance of CompositionModel
 	 */
 	public CompositionModel() { super();		}
 
 	/**
-	 * Creates a new instance of IndywinnerModel with appropriate initial state.
-	 * @param year	The year this driver won the Indy.
-	 * @param driver	The winning driver for the year of the race.
-	 * @param averageSpeed	The average speed the driver attained for the year of the race.
+	 * Creates a new instance of CompositionModel
+	 * @param composer The composer of the composition
+	 * @param compositionName The name of the composition
 	 */
 	public CompositionModel(String composer, String compositionName )	{
 		this(new CompositionPK(compositionName), composer);
 	}
 
 	/**
-	 * Creates a new instance of IndywinnerModel which represents all of the persistent domain
+	 * Creates a new instance of CompositionModel which represents all of the persistent domain
 	 * data for this object type.
-	 * @param primarykey	The primary key for this indy winner object.
-	 * @param driver	The winning driver for the year of the race.
-	 * @param averageSpeed	The average speed the driver attained for the year of the race.
+	 * @param primarykey	The primary key for this composition object.
+	 * @param composer The composer of the composition
 	 */
 	public CompositionModel(CompositionPK primarykey,
 								String composer )	{
@@ -52,8 +43,7 @@ public class CompositionModel extends CorePersistenceModel<CompositionPK>	{
 
 
 	/* ATTRIBUTES	--------------------------------------------------	*/
-	/** Drivers name.																	*/
-	private String composer;
-	/** Average speed during race.												*/
+	/** Composer name.																	*/
+	private String composer;											
 
 }

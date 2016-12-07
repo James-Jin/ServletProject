@@ -1,16 +1,10 @@
-/*
- * ConductorModel.java
- */
-
 package symphony;
-
-import java.util.List;
 
 import sql.CorePersistenceModel;
 
 /**
  * ConductorModel represents the persistence model for a conductor object.
- * @author Reg
+ * 
  */
 public class ComposerModel extends CorePersistenceModel<ComposerPK>	{
 	/**
@@ -21,7 +15,7 @@ public class ComposerModel extends CorePersistenceModel<ComposerPK>	{
 	/**
 	 * Creates a new instance of ConductorModel
 	 * 
-	 * @param name
+	 * @param name The name of the composer
 	 */
 	public ComposerModel(String name) {
 		this(new ComposerPK(name));
@@ -30,8 +24,7 @@ public class ComposerModel extends CorePersistenceModel<ComposerPK>	{
 	/**
 	 * Creates a new instance of ConductorModel
 	 * 
-	 * @param primarykey
-	 * @param name
+	 * @param primarykey The primary key for a composer
 	 */
 	public ComposerModel(ComposerPK primarykey) {
 		super();

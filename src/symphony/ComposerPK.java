@@ -1,13 +1,8 @@
-/*
- *  @(#)ConductorPK.java
- */
-
 package	symphony;
 
 /**
  * ConductorPK is the primary key class for a Conductor entity.
- * @author    R. Dyer
- * @version   1.0.0 May 2002
+ *
  */
 public class ComposerPK implements java.io.Serializable	{
 	/**
@@ -16,7 +11,7 @@ public class ComposerPK implements java.io.Serializable	{
 	public ComposerPK()	{}
 
 	/**
-	 *	Constructor to build a primary key from an Name.
+	 *	Constructor to build a primary key from a name.
 	 *	@param	name	The composer name.
 	 */
 	public ComposerPK(String name)	{ this.name = name;		}
@@ -45,7 +40,7 @@ public class ComposerPK implements java.io.Serializable	{
 
 
 	/**
-	 *	Implemenation of the "object" equals method.
+	 *	Implementation of the "object" equals method.
 	 *	@return	True if the fields of this primary key object equal the
 	 *	contents of the fields from the passed primary key object, otherwise
 	 *	false, they are not equal.
@@ -60,7 +55,7 @@ public class ComposerPK implements java.io.Serializable	{
 	 *	Implementation of the "object"hashCode()" method.
 	 * Whenever it is invoked on the same object more than once during
 	 * an execution of a Java application, the hashCode method
-	 * must consistently return the same integer, provnameed no information
+	 * must consistently return the same integer, provided no information
 	 * used in equals comparisons on the object is modified.
 	 *	@return	A hash code value for the object.
 	 */

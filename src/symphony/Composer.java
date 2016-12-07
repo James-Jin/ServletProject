@@ -1,26 +1,17 @@
-/*
- *  @(#)IndyWinner.java
- *
- *
- */
-
 package symphony;
 
 import java.util.*;
 import sql.*;
 
 /**
- * Class representing an Indianapolis 500 race winner.
+ * Class representing a Composer.
  */
 public class Composer		{
-	/* STATIC PRE-OBJECT BEHAVIOR	-----------------------------------	*/
 	/* CREATORS	-----------------------------------------------------	*/
 	/**
-	 *	Create an instance of a new Indy winner.
-	 * @param year	The year this driver won the Indy.
-	 * @param driver	The winning driver for the year of the race.
-	 * @param averageSpeed	The average speed the driver attained for the year of the race.
-	 *	@return	An instance of an IndyWinner entity.
+	 *	Create an instance of a new Composer.
+	 * @param name The name of the composer
+	 *	@return	An instance of a Composer entity.
 	 *	@throws sql.CreateException
 	 */
 	public static Composer create(String name)
@@ -31,7 +22,6 @@ public class Composer		{
 		try	{
 			dao = (ComposerDAO) DAOFactory.getDAO(className);
 			dao.dbInsert(model);
-			/* This Indywinner has no other objects to reference			*/
 
 		} catch (Exception sqlex)	{
 			throw new CreateException(sqlex.getMessage());
@@ -46,11 +36,11 @@ public class Composer		{
 	 *	an instance to the entity, or a collection of instances.
 	 */
 	/**
-	 *	Find an Indy winner by its primary key.
-	 *	@return	An instance of an existing Indy winner entity.
+	 *	Find a Composer by its primary key.
+	 *	@return	An instance of an existing Composer entity.
 	 *	@throws sql.FinderException
 	 * @throws sql.NoSuchEntityException
-	 * @param	primarykey	The primary key of the IndyWinner to find.
+	 * @param	primarykey	The primary key of Composer to find.
 	 */
 	public static Composer findByPrimarykey(ComposerPK primarykey)
 								throws FinderException, NoSuchEntityException			{
@@ -63,10 +53,6 @@ public class Composer		{
 			model = (ComposerModel) dao.dbSelectByPrimaryKey(primarykey);
 			entity  = new Composer(model);
 
-			/* TODO:	add any other objects for this IndyWinner here		*/
-
-
-
 		} catch (DAOSysException | NoSuchEntityException sqlex)	{
 			throw new FinderException(sqlex.getMessage());
 		}
@@ -75,8 +61,8 @@ public class Composer		{
 	}
 
 	/**
-	 *	Find all Indywinner entities.
-	 *	@return	A collection of Indywinner instances.
+	 *	Find all composers.
+	 *	@return	A collection of composers.
 	 *	@throws	FinderException
 	 * @throws	CreateException
 	 */
@@ -91,9 +77,7 @@ public class Composer		{
 			while (itr.hasNext())	{
 				ComposerPK cpk = itr.next();
 				try	{
-					Composer entity = Composer.findByPrimarykey(cpk);
-
-					/* TODO:	build/get any other objects for this IndyWinner here		*/					
+					Composer entity = Composer.findByPrimarykey(cpk);				
 					listOfComposers.add(entity);
 
 				} catch (FinderException | NoSuchEntityException ex)	{
@@ -114,20 +98,14 @@ public class Composer		{
 
 	/* REMOVERS	-----------------------------------------------------	*/
 	/**
-	 *	Remove an Indywinner by primary key.
-	 *	@param	primarykey	The primary key for the Indywinner to find.
+	 *	Remove a composer by primary key.
+	 *	@param	primarykey	The primary key for the composer to find.
 	 *	@throws	ObjectNotFoundException
 	 */
 	private static int removeByPrimarykey(ComposerPK primarykey)
 								throws	DAOSysException, NoSuchEntityException	{
 		int rc = 0;
 		ComposerDAO dao = null;
-
-		/*	TODO:	remove any other objects here first ...				*/
-
-
-
-		/* ...then remove the Indy Winner									*/
 		dao = (ComposerDAO) DAOFactory.getDAO(className);
 		rc = dao.dbRemove(primarykey);
 
@@ -143,9 +121,7 @@ public class Composer		{
 
 	/**
 	 *	Parameterized constructor.
-	 * @param year	The year this driver won the Indy.
-	 * @param driver	The winning driver for the year of the race.
-	 * @param averageSpeed	The average speed the driver attained for the year of the race.
+	 * @param name The name of the composer
 	 */
 	private Composer(String name)		{
 		this(new ComposerModel(name));
@@ -153,13 +129,10 @@ public class Composer		{
 
 	/**
 	 *	Parameterized constructor.
-	 *	@param	model	The persistence model for a Indywinner object.
+	 *	@param	model	The persistence model for a Composer object.
 	 */
 	private Composer(ComposerModel model)	{
 		setModel(model);
-
-		/* TODO:	add any other initialization requirements here			*/
-
 	}
 
 
@@ -177,8 +150,8 @@ public class Composer		{
 
 	/* BEHAVIOR	-----------------------------------------------------	*/
 	/**
-	 *	Implementation of the "object" equals method.  IndyWinners objects are equal
-	 *	if their primary key's are equal.
+	 *	Implementation of the "object" equals method.  Composer objects are equal
+	 *	if their primary keys are equal.
 	 *	@return	True if the fields of this primary key object equal the
 	 *	contents of the fields from the passed primary key object, otherwise
 	 *	false, they are not equal.
@@ -218,13 +191,13 @@ public class Composer		{
 	@Override
 	public String toString()	{ return this.toString(", ");				}
 	public String toString(String sep)	{
-		return "movement=" + getComposerName()
-				+ sep + "movement name=" + getComposerName()
+		return "composer=" + getComposerName()
+				+ sep + "composer name=" + getComposerName()
 			;
 	}
 
 	/**
-	 *	Remove a Indywinner from the data store (by primary key).
+	 *	Remove a Composer from the data store (by primary key).
 	 * @return
 	 * @throws sql.NoSuchEntityException
 	 * @throws sql.DAOSysException

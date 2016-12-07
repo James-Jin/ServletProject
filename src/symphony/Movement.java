@@ -1,26 +1,18 @@
-/*
- *  @(#)IndyWinner.java
- *
- *
- */
-
 package symphony;
 
 import java.util.*;
 import sql.*;
 
 /**
- * Class representing an Indianapolis 500 race winner.
+ * Class representing a Movement in a composition.
  */
 public class Movement		{
-	/* STATIC PRE-OBJECT BEHAVIOR	-----------------------------------	*/
 	/* CREATORS	-----------------------------------------------------	*/
 	/**
-	 *	Create an instance of a new Indy winner.
-	 * @param year	The year this driver won the Indy.
-	 * @param driver	The winning driver for the year of the race.
-	 * @param averageSpeed	The average speed the driver attained for the year of the race.
-	 *	@return	An instance of an IndyWinner entity.
+	 *	Create an instance of a Movement.
+	 *  @param movementNumber represents the position of a movement in the composition 
+	 *  @param movementName The name of the movement
+	 *	@return	An instance of a Movement entity.
 	 *	@throws sql.CreateException
 	 */
 	public static Movement create(int movementNumber,
@@ -32,7 +24,6 @@ public class Movement		{
 		try	{
 			dao = (MovementDAO) DAOFactory.getDAO(className);
 			dao.dbInsert(model);
-			/* This Indywinner has no other objects to reference			*/
 
 		} catch (Exception sqlex)	{
 			throw new CreateException(sqlex.getMessage());
@@ -47,11 +38,11 @@ public class Movement		{
 	 *	an instance to the entity, or a collection of instances.
 	 */
 	/**
-	 *	Find an Indy winner by its primary key.
-	 *	@return	An instance of an existing Indy winner entity.
+	 *	Find a Movement by its primary key.
+	 *	@return	An instance of an existing Movement entity.
 	 *	@throws sql.FinderException
 	 * @throws sql.NoSuchEntityException
-	 * @param	primarykey	The primary key of the IndyWinner to find.
+	 * @param	primarykey	The primary key of the Movement to find.
 	 */
 	public static Movement findByPrimarykey(MovementPK primarykey)
 								throws FinderException, NoSuchEntityException			{
@@ -64,10 +55,6 @@ public class Movement		{
 			model = (MovementModel) dao.dbSelectByPrimaryKey(primarykey);
 			entity  = new Movement(model);
 
-			/* TODO:	add any other objects for this IndyWinner here		*/
-
-
-
 		} catch (DAOSysException | NoSuchEntityException sqlex)	{
 			throw new FinderException(sqlex.getMessage());
 		}
@@ -76,8 +63,8 @@ public class Movement		{
 	}
 
 	/**
-	 *	Find all Indywinner entities.
-	 *	@return	A collection of Indywinner instances.
+	 *	Find all Movement entities.
+	 *	@return	A collection of Movement instances.
 	 *	@throws	FinderException
 	 * @throws	CreateException
 	 */
@@ -94,7 +81,7 @@ public class Movement		{
 				try	{
 					Movement entity = Movement.findByPrimarykey(cpk);
 
-					/* TODO:	build/get any other objects for this IndyWinner here		*/					
+					/* TODO:	build/get any other objects for this Movement here		*/					
 					listOfMovements.add(entity);
 
 				} catch (FinderException | NoSuchEntityException ex)	{
@@ -113,7 +100,7 @@ public class Movement		{
 	
 
 	public static Collection<Movement> findByCompositionName(String compositionName) throws FinderException, CreateException			{
-		ArrayList<Movement> listOfIndyWinners = new ArrayList<>();
+		ArrayList<Movement> listOfMovements = new ArrayList<>();
 		MovementDAO dao = null;
 		
 		try	{
@@ -125,16 +112,10 @@ public class Movement		{
 				try	{
 					Movement entity = Movement.findByPrimarykey(cpk);
 
-					/* TODO:	build/get any other objects for this IndyWinner here		*/
-
-
-					
-					
-					/* Add this Indywinner to the list.						*/
-					listOfIndyWinners.add(entity);
+					listOfMovements.add(entity);
 
 				} catch (FinderException | NoSuchEntityException ex)	{
-					System.err.println("IndyWinner: Error processing list <" + ex.toString());
+					System.err.println("Movement: Error processing list <" + ex.toString());
 				}
 			}
 
@@ -144,14 +125,14 @@ public class Movement		{
 		}
 
 
-		return listOfIndyWinners;
+		return listOfMovements;
 	}
 
 
 	/* REMOVERS	-----------------------------------------------------	*/
 	/**
-	 *	Remove an Indywinner by primary key.
-	 *	@param	primarykey	The primary key for the Indywinner to find.
+	 *	Remove a Movement by primary key.
+	 *	@param	primarykey	The primary key for the Movement to find.
 	 *	@throws	ObjectNotFoundException
 	 */
 	private static int removeByPrimarykey(MovementPK primarykey)
@@ -159,11 +140,6 @@ public class Movement		{
 		int rc = 0;
 		MovementDAO dao = null;
 
-		/*	TODO:	remove any other objects here first ...				*/
-
-
-
-		/* ...then remove the Indy Winner									*/
 		dao = (MovementDAO) DAOFactory.getDAO(className);
 		rc = dao.dbRemove(primarykey);
 
@@ -179,9 +155,8 @@ public class Movement		{
 
 	/**
 	 *	Parameterized constructor.
-	 * @param year	The year this driver won the Indy.
-	 * @param driver	The winning driver for the year of the race.
-	 * @param averageSpeed	The average speed the driver attained for the year of the race.
+	 *  @param movementNumber represents the position of a movement in the composition 
+	 *  @param movementName The name of the movement
 	 */
 	private Movement(int movementNumber, String movementName)		{
 		this(new MovementModel(movementNumber, movementName));
@@ -189,12 +164,10 @@ public class Movement		{
 
 	/**
 	 *	Parameterized constructor.
-	 *	@param	model	The persistence model for a Indywinner object.
+	 *	@param	model	The persistence model for a Movement object.
 	 */
 	private Movement(MovementModel model)	{
 		setModel(model);
-
-		/* TODO:	add any other initialization requirements here			*/
 
 	}
 
@@ -214,10 +187,10 @@ public class Movement		{
 
 	/* BEHAVIOR	-----------------------------------------------------	*/
 	/**
-	 *	Implementation of the "object" equals method.  IndyWinners objects are equal
-	 *	if their primary key's are equal.
-	 *	@return	True if the fields of this primary key object equal the
-	 *	contents of the fields from the passed primary key object, otherwise
+	 *	Implementation of the "object" equals method.  Movement objects are equal
+	 *	if their names and numbers are equal.
+	 *	@return	True if the fields of this Movement object equal the
+	 *	contents of the fields from the passed Movement object, otherwise
 	 *	false, they are not equal.
 	 */
 	@Override
@@ -262,7 +235,7 @@ public class Movement		{
 	}
 
 	/**
-	 *	Remove a Indywinner from the data store (by primary key).
+	 *	Remove a Movement from the data store (by primary key).
 	 * @return
 	 * @throws sql.NoSuchEntityException
 	 * @throws sql.DAOSysException

@@ -1,39 +1,30 @@
-/*
- * IndywinnerModel.java
- *
- * Created on July 2, 2005, 2:13 PM
- */
-
 package symphony;
 
 import sql.CorePersistenceModel;
 
 /**
- * IndywinnerModel represents the persistence model for a customer object.
- * @author Reg
+ * MovementModel represents the persistence model for a customer object.
  */
 public class MovementModel extends CorePersistenceModel<MovementPK>	{
 	/**
-	 * Creates a default instance of IndywinnerModel
+	 * Creates a default instance of MovementModel
 	 */
 	public MovementModel() { super();		}
 
 	/**
-	 * Creates a new instance of IndywinnerModel with appropriate initial state.
-	 * @param year	The year this driver won the Indy.
-	 * @param driver	The winning driver for the year of the race.
-	 * @param averageSpeed	The average speed the driver attained for the year of the race.
+	 * Creates a new instance of MovementModel with appropriate initial state.
+	 *  @param movementNumber represents the position of a movement in the composition 
+	 *  @param name The name of the movement
 	 */
 	public MovementModel(int movementNumber, String movementName )	{
 		this(new MovementPK(movementNumber, movementName));
 	}
 
 	/**
-	 * Creates a new instance of IndywinnerModel which represents all of the persistent domain
+	 * Creates a new instance of MovementModel which represents all of the persistent domain
 	 * data for this object type.
-	 * @param primarykey	The primary key for this indy winner object.
-	 * @param driver	The winning driver for the year of the race.
-	 * @param averageSpeed	The average speed the driver attained for the year of the race.
+	 *  @param movementNumber represents the position of a movement in the composition 
+	 *  @param name The name of the movement
 	 */
 	public MovementModel(MovementPK primarykey )	{
 		super(primarykey);
@@ -45,6 +36,4 @@ public class MovementModel extends CorePersistenceModel<MovementPK>	{
 	public int getMovementNumber()			{ return getPrimarykey().getMovementNumber();								}
 
 	
-
-
 }

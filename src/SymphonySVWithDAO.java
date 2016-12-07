@@ -1,5 +1,4 @@
 /*
- * @(#)IndyListSV.java
  *
  * Copyright (c) 1998 Karl Moss. All Rights Reserved.
  * You may study, use, modify, and distribute this software for any
@@ -22,11 +21,12 @@ import java.util.Iterator;
 
 /**
  * <p>This is a simple servlet that will use JDBC to gather all
- * of the Indy 500 winner  information from a database and format it
+ * of the composer, composition and movement information from a database and format it
  * into an HTML table. This servlet uses HttpSessions to keep
  * track of the position within the ResultSet so that the
  * table can be split into several different pages, each with
- * a 'Next n rows' link.
+ * a 'Next Composer' link (if there is next composer), and a 'Next 10 rows' 
+ * (if there are more than 10 rows)
  */
 public class SymphonySVWithDAO extends HttpServlet	{
 
@@ -61,15 +61,17 @@ public class SymphonySVWithDAO extends HttpServlet	{
 	}
 
 	/**
-	 * <p>Performs the HTTP GET operation
+	 * <p>Performs the HTTP GET operation.</p>
 	 * @param req The request from the client
 	 * @param resp The response from the servlet
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 		 throws ServletException, java.io.IOException	{
-	 	/*	Get the last year shown on the page that
-	 	 *	called us. Remember that we are sorting
-	 	 *	the years in descending order.
+	 	/*	Get the parameter in the request if any
+	 	 * 	composerToShow : the next composer to show. it starts from 0. 
+	 	 *  	if composerToShow >= composer size, then it's end of the list
+	 	 *  pageNumber : the current page number (10 rows per page)
+	 	 *  	it starts from 1. eg.: page 1 -> row 0-9
 	 	 */
 		String composerToShowStr = req.getParameter("composerToShow");	
 		int composerToShow ;
@@ -102,10 +104,8 @@ public class SymphonySVWithDAO extends HttpServlet	{
 		out.println("</center></h2>");
 		out.println("<br>");
 
-		/*	Create any addition properties necessary for connecting
-		 *	to the database, such as user and password
-		 */
-
+		/*	Get next Composer and all the Compositions of this composer. 
+		 * 		 */
 		try	{
 			
 			boolean moreComposer = true;
@@ -119,21 +119,26 @@ public class SymphonySVWithDAO extends HttpServlet	{
 
 				out.println("<p><center>Composer: " + composerName+"</center></p>");
 			Collection<Composition> compositionList = Composition.findByComposerName(composerName);
+			
+			/* print the table, 10 rows maximum, return true if there is more rows */
 			boolean moreRows = formatTable(compositionList, out,  uri, pageNum);
 			
+			/* Show next Composer button, if there is next composer,
+			 * 		else print Last Composer */
 			if(moreComposer){
 				out.println("<form method=POST action=\"" + uri + "\">");
 				out.println("<center>");
 				out.println("<input type=submit value=\"Next Composer\">");
 				out.println("</center>");
 
-				/* Page was filled. Put in the last year that we saw						*/
+				/* Put this next composer to show number in the request	*/
 				out.println("<input type=hidden name=composerToShow value=" + composerToShow + ">");
 				out.println("</form>");
 			}else{
 				out.println("<p><center>Last Composer</center></p>");
 			}
 			
+			/* Show a 'Next 10 rows' Button if there is more rows */
 			if(moreRows){
 				pageNum++;
 				
@@ -142,7 +147,7 @@ public class SymphonySVWithDAO extends HttpServlet	{
 				out.println("<input type=submit value=\"Next 10 rows\">");
 				out.println("</center>");
 
-				/* Page was filled. Put in the last year that we saw						*/
+				/* Page was filled and there are more rows to show. Put this page number in the request*/
 				out.println("<input type=hidden name=pageNum value=" + pageNum + ">");
 				out.println("</form>");
 			}
@@ -163,8 +168,9 @@ public class SymphonySVWithDAO extends HttpServlet	{
 
 
 	/**
-	 * <p>Given a list of indy winners, format them into an HTML table
-	 * @param list	Collection of Indy Winners
+	 * <p>Given a list of compositions, get all the Movements in them and 
+	 * format them into an HTML table</p>
+	 * @param list	Collection of Compositions
 	 * @param out PrintWriter to use to output the table
 	 * @param uri Requesting URI
 	 * @return true if has more pages to show
@@ -175,13 +181,14 @@ public class SymphonySVWithDAO extends HttpServlet	{
 									int pageNum)
 			throws Exception		{
 
-		int rowToStart = (pageNum-1)*10;
-		int rowToEnd = pageNum *10;
-		int rowCounter = 0;
-
-		/*	Keep track of the last year found		
+		/*	Keep track of the current page		
 		 * 
 		 * 										*/
+		int rowToStart = (pageNum-1)*10;
+		int rowToEnd = pageNum *10; 
+		int rowCounter = 0;  // counter in this page, range 0 - 9
+
+
 		/*	Create the table																		*/
 		out.println("<center><table border>");
 
@@ -194,6 +201,10 @@ public class SymphonySVWithDAO extends HttpServlet	{
 		out.println("</tr>");
 	  
 
+	/* Print the compositions in table, 
+	 * get all the movements and print them in table,
+	 * stops once 10 rows are printed
+	 * */
 	  for (Composition composition : list)	{
 		  
 
@@ -206,8 +217,6 @@ public class SymphonySVWithDAO extends HttpServlet	{
 		  	}else if(rowCounter >= rowToEnd){
 				out.println("</table></center>");
 		  		return true;
-		  	}else{
-		  		//do nothing
 		  	}
 		  	rowCounter++;
 			
@@ -225,8 +234,6 @@ public class SymphonySVWithDAO extends HttpServlet	{
 			  	}else if(rowCounter >= rowToEnd){
 					out.println("</table></center>");
 			  		return true;
-			  	}else{
-			  		//do nothing
 			  	}
 			  	rowCounter++;
 

@@ -1,9 +1,3 @@
-/*
- * IndyWinnerDAO.java
- *
- * Created on July 2, 2005, 3:08 PM
- */
-
 package symphony;
 
 import java.sql.*;
@@ -15,20 +9,12 @@ import sql.DAOSysException;
 import sql.NoSuchEntityException;
 
 /**
- *	Data access object for customer data.  This class bridges the
+ *	Data access object for composition data.  This class bridges the
  *	object to non-object data-store layer.
- *	TODO:	change the following constants in the CoreDAO interface for your database.
- *
- *	public final static String DRIVER_NAME		= "com.mysql.jdbc.Driver";
- *	public final static String URL				= "jdbc:mysql://localhost/Indywinners";
- *	public final static String USER				= "indywinner";
- *	public final static String PASSWORD			= "Indy500";
- *
- * @author Reg
  */
 public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>	{
 	/**
-	 * Creates a new instance of IndyWinnerDAO
+	 * Creates a new instance of CompositonDAO
 	 */
 	public CompositionDAO() { this(CoreDAO.DRIVER_NAME, CoreDAO.URL, CoreDAO.USER, CoreDAO.PASSWORD);		}
 
@@ -47,13 +33,6 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 						String password)	{
 		super(drivername, url, user, password);
 	}
-
-
-	/* ACCESSORS	-----------------------------------------------	*/
-
-
-	/* MUTATORS	--------------------------------------------------	*/
-
 
 	/* BEHAVIOR	--------------------------------------------------------	*/
 	/**
@@ -119,7 +98,6 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 	@Override
 	public CompositionModel dbSelectByPrimaryKey(CompositionPK primarykey, String selectStm)
 				throws DAOSysException, NoSuchEntityException	{
-//		IndyWinnerPK pk = (IndyWinnerPK) primarykey;
 		CompositionPK pk = primarykey;
 		Connection connection = null;
 		PreparedStatement preparedStm = null;
@@ -320,8 +298,8 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 
 
 	/**
-	 * Called by remove() to remove the state for a IndyWinner entity from the database.
-	 *	@param	primarykey	The primary key of the IndyWinner entity
+	 * Called by remove() to remove the state for a Composition entity from the database.
+	 *	@param	primarykey	The primary key of the Composition entity
 	 *	to be removed from the data store.
 	 *	@param	deleteStm	Statement to remove entity data from the data store.
 	 *	@throws	DAOSysException
@@ -375,14 +353,12 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 
 		try	{
 			connection = connectToDB();
-			/*	Request a resultset that is scrollable to easily count rows	*/
 			preparedStm = connection.prepareStatement(
 										CompositionDAO.SELECT_DISTINCT_STM,
 										ResultSet.TYPE_SCROLL_INSENSITIVE,
 										ResultSet.CONCUR_UPDATABLE);
 			rs = preparedStm.executeQuery();
 
-			/*	Go to the last row and get its row number							*/
 			rs.last();
 			count = rs.getRow();
 
@@ -406,6 +382,10 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 
 	/* ATTRIBUTES	-----------------------------------------------	*/
 	private final static boolean _debug = false;
+	
+	/*
+	 * The attributes below are SQL statements for various datastore operations
+	 */
 
 	private static String SELECT_DISTINCT_STM =
 		"SELECT DISTINCT compositionName FROM " + "Composition";
@@ -437,4 +417,4 @@ public class CompositionDAO extends CoreDAOImpl<CompositionModel, CompositionPK>
 		+ "( ?, ? )";
 
 
-}	/*	End of Class:	IndyWinnerDAO.java				*/
+}	/*	End of Class:	CompositionDAO.java				*/

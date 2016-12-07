@@ -1,9 +1,3 @@
-/*
- * IndyWinnerDAO.java
- *
- * Created on July 2, 2005, 3:08 PM
- */
-
 package symphony;
 
 import java.sql.*;
@@ -15,20 +9,12 @@ import sql.DAOSysException;
 import sql.NoSuchEntityException;
 
 /**
- *	Data access object for customer data.  This class bridges the
+ *	Data access object for Movement data.  This class bridges the
  *	object to non-object data-store layer.
- *	TODO:	change the following constants in the CoreDAO interface for your database.
- *
- *	public final static String DRIVER_NAME		= "com.mysql.jdbc.Driver";
- *	public final static String URL				= "jdbc:mysql://localhost/Indywinners";
- *	public final static String USER				= "indywinner";
- *	public final static String PASSWORD			= "Indy500";
- *
- * @author Reg
  */
 public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 	/**
-	 * Creates a new instance of IndyWinnerDAO
+	 * Creates a new instance of MovementDAO
 	 */
 	public MovementDAO() { this(CoreDAO.DRIVER_NAME, CoreDAO.URL, CoreDAO.USER, CoreDAO.PASSWORD);		}
 
@@ -47,12 +33,6 @@ public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 						String password)	{
 		super(drivername, url, user, password);
 	}
-
-
-	/* ACCESSORS	-----------------------------------------------	*/
-
-
-	/* MUTATORS	--------------------------------------------------	*/
 
 
 	/* BEHAVIOR	--------------------------------------------------------	*/
@@ -119,7 +99,7 @@ public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 	@Override
 	public MovementModel dbSelectByPrimaryKey(MovementPK primarykey, String selectStm)
 				throws DAOSysException, NoSuchEntityException	{
-//		IndyWinnerPK pk = (IndyWinnerPK) primarykey;
+		
 		MovementPK pk = primarykey;
 		Connection connection = null;
 		PreparedStatement preparedStm = null;
@@ -210,7 +190,7 @@ public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 	
 	/**
 	 * Called by findAll() to find all entities in the data store.
-	 *	@return	A collection of primary keys representing all of the entities.
+	 * @return	A collection of primary keys representing all of the entities.
 	 */
 	public Collection<MovementPK> dbSelectByCompositionName(String compositionName)	throws DAOSysException {
 		return dbSelectByCompositionName(MovementDAO.SELECT_BY_COMPOSITION_NAME,compositionName);
@@ -219,7 +199,7 @@ public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 
 	/**
 	 * Called by findAll() to find all entities in the data store.
-	 *	@param selectStm
+	 * @param selectStm
 	 * @return	A collection of primary keys representing all of the entities.
 	 */
 	public Collection<MovementPK> dbSelectByCompositionName(String selectStm,  String compositionName)	throws DAOSysException {
@@ -256,8 +236,6 @@ public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 		return list;
 	}
 
-	
-	
 	
 	/**
 	 * Called by update() to update state for an entity in the database.
@@ -321,8 +299,8 @@ public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 
 
 	/**
-	 * Called by remove() to remove the state for a IndyWinner entity from the database.
-	 *	@param	primarykey	The primary key of the IndyWinner entity
+	 * Called by remove() to remove the state for a Movement entity from the database.
+	 *	@param	primarykey	The primary key of the Movement entity
 	 *	to be removed from the data store.
 	 *	@param	deleteStm	Statement to remove entity data from the data store.
 	 *	@throws	DAOSysException
@@ -425,9 +403,6 @@ public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 	private static String SELECT_ALL_STM =
 			"SELECT movementNumber, movementName " + "FROM " + "movement";
 	
-//	private static String SELECT_SET_BY_YEAR_STM =
-//			"SELECT DISTINCT year " + "FROM " + "IndyWinners WHERE YEAR > ?";
-	
 	private static String SELECT_BY_COMPOSITION_NAME = 
 			"SELECT movementNumber, movementName FROM movements WHERE compositionName = ?";
 
@@ -444,4 +419,4 @@ public class MovementDAO extends CoreDAOImpl<MovementModel, MovementPK>	{
 		+ "( ?, ? )";
 
 
-}	/*	End of Class:	IndyWinnerDAO.java				*/
+}	/*	End of Class:	MovementDAO.java				*/
